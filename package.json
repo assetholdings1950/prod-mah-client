@@ -1,0 +1,44 @@
+{
+  "name": "mah-client-fe",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/jsonwebtoken": "^9.0.10",
+    "axios": "^1.18.0",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
+    "jsonwebtoken": "^9.0.3",
+    "lenis": "^1.3.23",
+    "lucide-react": "^1.18.0",
+    "next": "16.2.9",
+    "ogl": "^1.0.11",
+    "pdf-lib": "^1.17.1",
+    "postprocessing": "^6.39.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sonner": "^2.0.7",
+    "three": "^0.184.0",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
+    "caniuse-lite": "^1.0.30001803",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.9",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
