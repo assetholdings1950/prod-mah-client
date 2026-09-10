@@ -1,5 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import StatsSection from "@/components/StatsSection";
+import GlobalPresenceSection from "@/components/GlobalPresenceSection";
 import InvestmentFocusSection from "@/components/InvestmentFocusSection";
 import FundsSection from "@/components/FundsSection";
 import TimelineSection from "@/components/TimelineSection";
@@ -14,6 +15,7 @@ export default function HomePage() {
     <>
       <main>
         <HeroSection />
+        <GlobalPresenceSection />
         <StatsSection />
         <InvestmentFocusSection />
         <FundsSection />
