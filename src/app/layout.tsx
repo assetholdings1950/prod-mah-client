@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Libre_Baskerville } from "next/font/google";
 import Script from "next/script";
+import "flag-icons/css/flag-icons.min.css";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import AppChrome from "@/components/AppChrome";
@@ -25,9 +26,26 @@ const TAWK_TO_WIDGET_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://merlionassetholdings.com"),
-  title: "Merlion Asset Holdings | Singapore",
+  title: "Merlion Asset Holdings | Global Investment Management",
   description:
-    "A premier investment institution offering global perspective, disciplined strategy, and trusted returns.",
+    "Merlion Asset Holdings is a Singapore-headquartered investment institution with a global presence across the UAE, Canada, Russia, the United Kingdom, and India.",
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Merlion Asset Holdings",
+  url: "https://merlionassetholdings.com",
+  description:
+    "A Singapore-headquartered investment institution with a global presence across the United Arab Emirates, Canada, Russia, the United Kingdom, and India.",
+  areaServed: [
+    "Singapore",
+    "United Arab Emirates",
+    "Canada",
+    "Russia",
+    "United Kingdom",
+    "India",
+  ].map((name) => ({ "@type": "Country", name })),
 };
 
 export default function RootLayout({
@@ -41,6 +59,12 @@ export default function RootLayout({
       className={`${inter.variable} ${libreBaskerville.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {/* Google Ads base tag */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`}

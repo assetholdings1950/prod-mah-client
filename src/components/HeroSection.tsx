@@ -1286,7 +1286,8 @@ export default function HeroSection() {
       <div className="hero__inner">
         <div className="hero__eyebrow" style={{ animation: "hUp .8s .1s both" }}>
           <span className="hero__pulse" />
-          Singapore · 20 Years Experience · MAS-Regulated
+          <span>Singapore Headquarters · Global Presence · Now in India</span>
+          <span aria-hidden className="hero__indiaFlag fi fi-in" />
         </div>
 
         <h1 className="hero__title">
@@ -1350,6 +1351,8 @@ const css = `
   font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
 .hero__pulse{ width:6px; height:6px; border-radius:50%; background:var(--accent);
   box-shadow:0 0 8px var(--accent); animation:hPulse 2.2s ease-in-out infinite; }
+.hero__indiaFlag{ width:17px; height:12px; flex-shrink:0; border-radius:2px;
+  box-shadow:0 0 0 1px rgba(11,31,58,.12); background-size:cover; }
 
 .hero__title{ margin:0; color:var(--ink); line-height:1.05; letter-spacing:-.03em;
   font-family:var(--font-playfair, Georgia, "Times New Roman", serif); font-weight:700;

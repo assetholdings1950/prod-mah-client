@@ -29,6 +29,15 @@ const legalLinks = [
   { label: "Compliance", href: "/compliance" },
 ];
 
+const globalLocations = [
+  { label: "Singapore HQ", code: "sg", isNew: false },
+  { label: "UAE", code: "ae", isNew: false },
+  { label: "Canada", code: "ca", isNew: false },
+  { label: "Russia", code: "ru", isNew: false },
+  { label: "UK", code: "gb", isNew: false },
+  { label: "India", code: "in", isNew: true },
+] as const;
+
 const socials: Social[] = [
   {
     label: "LinkedIn",
@@ -147,11 +156,17 @@ export default function Footer() {
               long-term growth and capital preservation.
             </p>
 
-
-            {/* HQ badge */}
-            <div className="f-badge">
-              <span className="f-badgeFlag" aria-hidden>🇸🇬</span>
-              <span>Headquartered in Singapore</span>
+            <div className="f-locationGroup" aria-label="Merlion global locations">
+              {globalLocations.map((location) => (
+                <div className="f-badge" key={location.code}>
+                  <span
+                    className={`f-badgeFlag fi fi-${location.code}`}
+                    aria-hidden
+                  />
+                  <span>{location.label}</span>
+                  {location.isNew && <span className="f-new">New</span>}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -339,14 +354,25 @@ const css = `
 }
 .f-ico{ width:17px; height:17px; }
 
-/* HQ badge */
+/* Global location badges */
+.f-locationGroup{
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px; max-width:410px;
+}
 .f-badge{
   display:inline-flex; align-items:center; gap:8px; width:fit-content;
   padding:7px 13px; border-radius:999px; font-size:.72rem; font-weight:500;
   color:rgba(255,255,255,.65); background:rgba(255,255,255,.05);
   border:1px solid rgba(255,255,255,.12);
 }
-.f-badgeFlag{ font-size:.95rem; line-height:1; }
+.f-badgeFlag{
+  width:17px; height:12px; flex-shrink:0; border-radius:2px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14); background-size:cover;
+}
+.f-new{
+  margin-left:1px; padding:2px 5px; border-radius:999px;
+  color:#93C5FD; background:rgba(37,99,235,.2); font-size:.52rem;
+  font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+}
 
 /* ── Link columns ── */
 .f-colNav{ grid-area:nav; }
