@@ -100,7 +100,8 @@ export default function RootLayout({
           `}
         </Script>
 
-        {/* Tawk.to live chat */}
+        {/* Tawk.to live chat (disabled) */}
+        {/*
         <Script id="tawk-to-widget" strategy="afterInteractive">
           {`
             window.Tawk_API = window.Tawk_API || {};
@@ -117,6 +118,7 @@ export default function RootLayout({
             })();
           `}
         </Script>
+        */}
 
         <SmoothScrollProvider>
           <AppChrome>{children}</AppChrome>
