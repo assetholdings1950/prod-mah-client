@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     AlertCircle, ArrowRight, BarChart3, Banknote, Bitcoin,
-    BriefcaseBusiness, ChevronLeft, ChevronRight, Loader2,
+    BriefcaseBusiness, ChevronLeft, ChevronRight, Landmark, Loader2,
     TrendingUp, Wallet,
 } from "lucide-react";
 import appClient from "@/lib/appClient";
@@ -116,6 +116,90 @@ function PortfolioCard({ p }: { p: ClientPortfolioInterface }) {
             </div>
         </Link>
     );
+}
+
+type BondInvestment = {
+    _id: string;
+    investmentId: string;
+    amountUsd: number;
+    startedAt: string;
+    maturityDate: string;
+    status: string;
+    bondSnapshot: { name?: string; code?: string; couponRateAnnual?: number; couponFrequency?: string; termMonths?: number; riskLevel?: string };
+    paidFromWallet?: { currency?: string; amount?: number };
+};
+
+type BondInvestmentResponse = {
+    investments?: BondInvestment[];
+    summary?: { totalInvestedUsd: number; activeInvestmentCount: number; activeInvestedUsd: number };
+    pagination?: { total: number; page: number; totalPages: number; limit: number };
+};
+
+function BondInvestmentCard({ investment }: { investment: BondInvestment }) {
+    const statusStyle = STATUS_STYLES[investment.status] ?? STATUS_STYLES.active;
+    const bond = investment.bondSnapshot ?? {};
+    return (
+        <article className="flex flex-col gap-4 rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
+            <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EFF4FF]"><Landmark className="h-5 w-5 text-[#0B2E84]" /></div>
+                    <div><p className="text-[13.5px] font-bold leading-tight text-[#0F172A]">{bond.name || "Bond investment"}</p><p className="mt-0.5 text-[11.5px] text-slate-500">{bond.code || "Fixed income"}</p></div>
+                </div>
+                <span className={`shrink-0 rounded-full border px-2.5 py-0.5 text-[10.5px] font-bold uppercase tracking-wide ${statusStyle}`}>{STATUS_LABEL[investment.status] ?? investment.status}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+                <div className="rounded-xl bg-[#F8FAFC] px-3 py-2.5"><p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Invested</p><p className="mt-1 text-[13px] font-bold text-[#0F172A]">{fmt(investment.amountUsd)}</p></div>
+                <div className="rounded-xl bg-[#F8FAFC] px-3 py-2.5"><p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Coupon</p><p className="mt-1 text-[13px] font-bold text-emerald-600">{Number(bond.couponRateAnnual || 0).toFixed(2)}%</p></div>
+                <div className="rounded-xl bg-[#F8FAFC] px-3 py-2.5"><p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">Maturity</p><p className="mt-1 text-[13px] font-bold text-[#0F172A]">{fmtDate(investment.maturityDate)}</p></div>
+            </div>
+            <div className="flex items-center justify-between border-t border-[#F1F5F9] pt-3"><p className="font-mono text-[11px] text-slate-400">{investment.investmentId}</p><p className="text-[11px] font-medium text-slate-500">Paid {investment.paidFromWallet?.amount ?? "—"} {investment.paidFromWallet?.currency ?? ""}</p></div>
+        </article>
+    );
+}
+
+function BondInvestmentList() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const status = searchParams.get("status") ?? "";
+    const page = Number(searchParams.get("page") ?? "1");
+    const [investments, setInvestments] = useState<BondInvestment[]>([]);
+    const [summary, setSummary] = useState<BondInvestmentResponse["summary"]>();
+    const [pagination, setPagination] = useState({ total: 0, page: 1, totalPages: 1, limit: 9 });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const updateUrl = (nextStatus: string, nextPage: number) => {
+        const params = new URLSearchParams({ tab: "bonds" });
+        if (nextStatus) params.set("status", nextStatus);
+        if (nextPage > 1) params.set("page", String(nextPage));
+        router.replace(`?${params.toString()}`, { scroll: false });
+    };
+
+    useEffect(() => {
+        let cancelled = false;
+        void (async () => {
+            setLoading(true); setError("");
+            try {
+                const response = await appClient.get("/api/bonds/investments/my", { params: { status: status || undefined, page, limit: 9 } });
+                const data = response.data as BondInvestmentResponse;
+                if (cancelled) return;
+                setInvestments(data.investments ?? []); setSummary(data.summary); setPagination(data.pagination ?? { total: 0, page, totalPages: 1, limit: 9 });
+            } catch { if (!cancelled) setError("Could not load your bond investments. Please try again."); }
+            finally { if (!cancelled) setLoading(false); }
+        })();
+        return () => { cancelled = true; };
+    }, [page, status]);
+
+    if (loading) return <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{[1, 2, 3].map(i => <div key={i} className="h-48 animate-pulse rounded-2xl bg-white" />)}</div>;
+    return <>
+        <div className="mb-6 flex flex-wrap items-center gap-2">
+            {STATUS_FILTERS.filter(filter => filter.value !== "paused").map(filter => <FilterPill key={filter.value} label={filter.label} active={status === filter.value} onClick={() => updateUrl(filter.value, 1)} />)}
+            {summary && <p className="ml-auto text-[12px] font-medium text-slate-500">{summary.activeInvestmentCount} active · {fmt(summary.activeInvestedUsd)} active value</p>}
+        </div>
+        {error && <div className="mb-6 flex items-center gap-3 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-[13px] text-rose-700"><AlertCircle className="h-4 w-4 shrink-0" />{error}</div>}
+        {investments.length ? <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{investments.map(investment => <BondInvestmentCard key={investment._id} investment={investment} />)}</div> : <div className="flex flex-col items-center py-20 text-center"><div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#EFF4FF]"><Landmark className="h-8 w-8 text-[#0B2E84]" /></div><h3 className="mt-5 text-[16px] font-bold text-[#0F172A]">{status ? "No bond investments match" : "No bond investments yet"}</h3><p className="mt-2 max-w-xs text-[13px] leading-6 text-slate-500">{status ? "Try a different status to see your bond investments." : "Explore available bonds to add fixed-income investments to your portfolio."}</p>{!status && <Link href="/bonds" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0B2E84] px-5 py-2.5 text-[13px] font-bold text-white hover:bg-[#082461]"><Landmark className="h-4 w-4" /> Explore Bonds</Link>}</div>}
+        {pagination.totalPages > 1 && <div className="mt-8 flex items-center justify-center gap-2">{Array.from({ length: pagination.totalPages }, (_, index) => index + 1).map(number => <button key={number} onClick={() => updateUrl(status, number)} className={`h-9 w-9 rounded-xl text-[13px] font-semibold ${page === number ? "bg-[#0B2E84] text-white" : "border border-[#E2E8F0] bg-white text-slate-600"}`}>{number}</button>)}</div>}
+    </>;
 }
 
 function EmptyState({ filtered }: { filtered: boolean }) {

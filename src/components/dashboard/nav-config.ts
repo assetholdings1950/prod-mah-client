@@ -1,4 +1,4 @@
-import { LayoutDashboard, TrendingUp, Wallet, ShieldCheck, CreditCard, UserCircle, ArrowLeftRight, BriefcaseBusiness, FileSignature, Gift, Bell, Headset } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, ShieldCheck, CreditCard, UserCircle, ArrowLeftRight, BriefcaseBusiness, FileSignature, Gift, Bell, Landmark } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type NavItem = {
@@ -10,6 +10,8 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
     { label: "Dashboard",       href: "/dashboard",       icon: LayoutDashboard },
     { label: "Browse Plans",    href: "/investments",     icon: TrendingUp },
+    { label: "Bonds",           href: "/bonds",           icon: Landmark },
+    { label: "My Bonds",        href: "/my-bonds",        icon: Landmark },
     { label: "My Portfolio",    href: "/portfolio",       icon: BriefcaseBusiness },
     { label: "Wallet",          href: "/wallet",          icon: Wallet },
     { label: "Transactions",    href: "/transactions",    icon: ArrowLeftRight },
@@ -22,7 +24,7 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 // Routes that require approved KYC — /kyc itself is always accessible
-export const KYC_GATED = ["/dashboard", "/investments", "/wallet", "/payment-methods", "/account-opening"];
+export const KYC_GATED = ["/dashboard", "/investments", "/bonds", "/my-bonds", "/wallet", "/payment-methods", "/account-opening"];
 
 export const KYC_BADGE: Record<string, { label: string; className: string }> = {
     approved: { label: "Verified", className: "bg-emerald-500/15 text-emerald-400 border-emerald-500/20" },
