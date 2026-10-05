@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import WalletRewardBanner from "@/components/WalletRewardBanner";
 
 const AUTH_ROUTES = ["/signup", "/login", "/forgot-password"];
-const DASHBOARD_ROUTES = ["/dashboard", "/investments", "/wallet", "/kyc", "/payment-methods", "/profile", "/transactions", "/portfolio", "/account-opening", "/referrals", "/notifications"];
+const DASHBOARD_ROUTES = ["/dashboard", "/investments", "/wallet", "/kyc", "/payment-methods", "/profile", "/transactions", "/portfolio", "/account-opening", "/referrals", "/notifications", "/bonds", "/my-bonds"];
 
 export default function AppChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
