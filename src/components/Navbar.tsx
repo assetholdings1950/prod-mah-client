@@ -13,7 +13,13 @@ import {
   useRewardBannerVisible,
 } from "@/components/WalletRewardBanner";
 
-const NAV_ITEMS = ["Funds", "About", "Hiring", "Contact"];
+const NAV_ITEMS = [
+  { label: "Funds", href: "/funds" },
+  { label: "Bonds", href: "/bond-offerings" },
+  { label: "About", href: "/about" },
+  { label: "Hiring", href: "/hiring" },
+  { label: "Contact", href: "/contact" },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -128,7 +134,7 @@ export default function Navbar() {
           {/* Desktop nav links */}
           <ul className="hidden md:flex gap-10 lg:gap-12 list-none m-0 p-0 flex-1 justify-center">
             {NAV_ITEMS.map((item) => (
-              <li key={item}><NavLink label={item} /></li>
+              <li key={item.href}><NavLink {...item} /></li>
             ))}
           </ul>
 
@@ -306,16 +312,16 @@ export default function Navbar() {
           <ul className="flex flex-col items-center gap-7 list-none m-0 p-0 w-full">
             {NAV_ITEMS.map((item, i) => (
               <li
-                key={item}
+                key={item.href}
                 className="w-full text-center"
                 style={{ animation: menuOpen ? `fade-up 0.4s ${i * 0.07}s both` : "none" }}
               >
                 <Link
-                  href={`/${item.toLowerCase()}`}
+                  href={item.href}
                   onClick={() => setMenuOpen(false)}
                   className="font-[var(--font-inter,sans-serif)] font-semibold text-[2.25rem] leading-none text-navy opacity-75 hover:opacity-100 no-underline transition-opacity duration-200 tracking-[-0.02em]"
                 >
-                  {item}
+                  {item.label}
                 </Link>
               </li>
             ))}
@@ -449,11 +455,11 @@ function LoginOption({
 }
 
 /* ── Desktop NavLink ───────────────────────────────────────────── */
-function NavLink({ label }: { label: string }) {
+function NavLink({ label, href }: { label: string; href: string }) {
   const [hovered, setHovered] = useState(false);
   return (
     <Link
-      href={`/${label.toLowerCase()}`}
+      href={href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={`font-[var(--font-inter,sans-serif)] font-medium text-sm tracking-[0.02em] no-underline relative pb-1 transition-opacity duration-[250ms] text-navy ${hovered ? "opacity-100" : "opacity-[0.68]"
